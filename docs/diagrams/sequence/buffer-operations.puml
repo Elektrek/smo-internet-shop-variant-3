@@ -1,0 +1,47 @@
+@startuml
+ title Отдельные операции буфера: кольцевая постановка и выборка
+ autonumber
+ control "PlacementDispatcher" as Put
+ queue "Buffer\nslots[0..B-1]" as Buffer
+ control "SelectionDispatcher" as Select
+ control "SimulationEngine" as Engine
+
+ == Постановка: Д1ОЗ1 ==
+ Engine -> Put: ARRIVAL(request) trigger
+ Put -> Buffer: findFreeSlotCircular(putPointer)
+ Buffer --> Put: first free index from pointer / FULL
+ alt Есть место
+   Put -> Buffer: slots[index] = request
+   Buffer -> Buffer: putPointer = (index + 1) mod B
+   Buffer --> Put: stored(index)
+ else Нет места
+   Put --> Engine: report FULL to placement logic
+   note over Put,Buffer
+   Применяется Д1ОО3: найти и удалить старейшую
+   ожидающую заявку, после чего занять освободившуюся ячейку.
+   end note
+   Put -> Buffer: evictOldestWaiting()
+   Buffer --> Put: victim + freed index
+   Put -> Buffer: slots[index] = request
+   Buffer -> Buffer: putPointer = (index + 1) mod B
+   Buffer --> Put: stored(index)
+ end
+ Put --> Engine: REQUEST_ENQUEUED
+
+ == Выборка: Д2Б3 ==
+ Engine -> Select: onRequestEnqueued() или onDeviceAvailable()
+ Select -> Buffer: isEmpty()
+ Buffer --> Select: false
+ Select -> Buffer: findNextOccupiedCircular(selectionPointer)
+ Buffer --> Select: occupied index + request
+ Select -> Buffer: slots[index] = empty
+ Buffer -> Buffer: selectionPointer = (index + 1) mod B
+ Buffer --> Select: request removed
+ Select --> Engine: selected request
+
+ note over Buffer
+ putPointer — следующая стартовая позиция размещения.
+ selectionPointer — следующая стартовая позиция выборки.
+ Позиции независимы; оба указателя входят в снимок состояния ОД1.
+ end note
+@enduml

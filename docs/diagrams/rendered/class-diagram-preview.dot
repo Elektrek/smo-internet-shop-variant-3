@@ -1,0 +1,37 @@
+digraph G {
+  graph [rankdir=LR, splines=ortho, nodesep=0.42, ranksep=0.78, pad=0.2, bgcolor="white", fontname="Arial", label="Диаграмма классов — СМО поиска товаров интернет-магазина", labelloc=t, fontsize=20];
+  node [shape=plain, fontname="Arial", fontsize=10];
+  edge [fontname="Arial", fontsize=8, color="#596579", arrowsize=0.7];
+  Engine [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#DCEBFA"><B>SimulationEngine</B></TD></TR><TR><TD ALIGN="LEFT">- modelTime: double<BR ALIGN="LEFT"/>- eventCalendar: EventCalendar<BR ALIGN="LEFT"/>- placementDispatcher: PlacementDispatcher<BR ALIGN="LEFT"/>- selectionDispatcher: SelectionDispatcher<BR ALIGN="LEFT"/>- devicePool: DevicePool<BR ALIGN="LEFT"/>- statistics: Statistics</TD></TR><TR><TD ALIGN="LEFT">+ run()<BR ALIGN="LEFT"/>+ processNextEvent()<BR ALIGN="LEFT"/>+ triggerSelection(reason)<BR ALIGN="LEFT"/>+ getStateSnapshot()</TD></TR></TABLE> >];
+  Source [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#DCEBFA"><B>Source</B></TD></TR><TR><TD ALIGN="LEFT">- id: String<BR ALIGN="LEFT"/>- interarrival: ExpDistribution<BR ALIGN="LEFT"/>- nextArrivalTime: double</TD></TR><TR><TD ALIGN="LEFT">+ generateRequest(now)<BR ALIGN="LEFT"/>+ sampleNextArrival(now)</TD></TR></TABLE> >];
+  Request [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#E4F5E8"><B>Request</B></TD></TR><TR><TD ALIGN="LEFT">- id, sourceId<BR ALIGN="LEFT"/>- queryText, filters<BR ALIGN="LEFT"/>- generatedAt, enqueuedAt<BR ALIGN="LEFT"/>- serviceStartedAt, completedAt<BR ALIGN="LEFT"/>- status: RequestStatus</TD></TR><TR><TD ALIGN="LEFT">+ markBuffered()<BR ALIGN="LEFT"/>+ markInService()<BR ALIGN="LEFT"/>+ markCompleted()<BR ALIGN="LEFT"/>+ getWaitTime()<BR ALIGN="LEFT"/>+ getSojournTime()</TD></TR></TABLE> >];
+  Place [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#DCEBFA"><B>PlacementDispatcher</B></TD></TR><TR><TD ALIGN="LEFT">- buffer: Buffer<BR ALIGN="LEFT"/>- statistics: Statistics</TD></TR><TR><TD ALIGN="LEFT">+ handleArrival(request, now)<BR ALIGN="LEFT"/>- applyOverflowRule()</TD></TR></TABLE> >];
+  Buffer [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#FFF1D6"><B>Buffer</B></TD></TR><TR><TD ALIGN="LEFT">- capacity: int<BR ALIGN="LEFT"/>- slots: Request[]<BR ALIGN="LEFT"/>- putPointer: int<BR ALIGN="LEFT"/>- selectionPointer: int</TD></TR><TR><TD ALIGN="LEFT">+ enqueueCircular() [Д1ОЗ1]<BR ALIGN="LEFT"/>+ dequeueCircular() [Д2Б3]<BR ALIGN="LEFT"/>+ findOldestWaiting() [Д1ОО3]<BR ALIGN="LEFT"/>+ snapshotSlots()</TD></TR></TABLE> >];
+  Select [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#DCEBFA"><B>SelectionDispatcher</B></TD></TR><TR><TD ALIGN="LEFT">- buffer: Buffer<BR ALIGN="LEFT"/>- devicePool: DevicePool<BR ALIGN="LEFT"/>- eventCalendar: EventCalendar<BR ALIGN="LEFT"/>- statistics: Statistics</TD></TR><TR><TD ALIGN="LEFT">+ onRequestEnqueued()<BR ALIGN="LEFT"/>+ onDeviceAvailable()<BR ALIGN="LEFT"/>+ dispatchWhilePossible()</TD></TR></TABLE> >];
+  Pool [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#DCEBFA"><B>DevicePool</B></TD></TR><TR><TD ALIGN="LEFT">- workers: List&lt;Worker&gt;</TD></TR><TR><TD ALIGN="LEFT">+ findFirstFreeByIndex() [Д2П1]<BR ALIGN="LEFT"/>+ hasFreeWorker()<BR ALIGN="LEFT"/>+ snapshot()</TD></TR></TABLE> >];
+  Worker [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#E4F5E8"><B>Worker</B></TD></TR><TR><TD ALIGN="LEFT">- id: int<BR ALIGN="LEFT"/>- state: FREE/BUSY<BR ALIGN="LEFT"/>- currentRequest: Request<BR ALIGN="LEFT"/>- serviceDistribution: Uniform [ПЗ2]</TD></TR><TR><TD ALIGN="LEFT">+ startService(request, now)<BR ALIGN="LEFT"/>+ completeService(now)<BR ALIGN="LEFT"/>+ getSnapshot()</TD></TR></TABLE> >];
+  Calendar [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#DCEBFA"><B>EventCalendar</B></TD></TR><TR><TD ALIGN="LEFT">- events: PriorityQueue&lt;Event&gt;<BR ALIGN="LEFT"/>- nextSequence: long</TD></TR><TR><TD ALIGN="LEFT">+ schedule(event)<BR ALIGN="LEFT"/>+ pollNext()<BR ALIGN="LEFT"/>+ snapshot()</TD></TR></TABLE> >];
+  Event [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#E4F5E8"><B>SimulationEvent</B></TD></TR><TR><TD ALIGN="LEFT">- time: double<BR ALIGN="LEFT"/>- type: EventType<BR ALIGN="LEFT"/>- sourceId / workerId / requestId</TD></TR><TR><TD ALIGN="LEFT">+ compareTo(other)</TD></TR></TABLE> >];
+  Stats [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#DCEBFA"><B>Statistics</B></TD></TR><TR><TD ALIGN="LEFT">- generatedCount<BR ALIGN="LEFT"/>- completedCount<BR ALIGN="LEFT"/>- evictedCount<BR ALIGN="LEFT"/>- totalWaitTime<BR ALIGN="LEFT"/>- totalSojournTime</TD></TR><TR><TD ALIGN="LEFT">+ recordGenerated()<BR ALIGN="LEFT"/>+ recordEvicted()<BR ALIGN="LEFT"/>+ recordCompleted()<BR ALIGN="LEFT"/>+ refusalRate()<BR ALIGN="LEFT"/>+ resultsSnapshot()</TD></TR></TABLE> >];
+  View [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#F0E7FB"><B>StepByStepView / ResultsReporter</B></TD></TR><TR><TD ALIGN="LEFT">ОД1: календарь и состояние СМО<BR ALIGN="LEFT"/>ОР1: сводная таблица</TD></TR></TABLE> >];
+  Engine -> Source [label="1..* источников"];
+  Engine -> Place;
+  Engine -> Select;
+  Engine -> Pool;
+  Engine -> Calendar;
+  Engine -> Stats;
+  Source -> Request [style=dashed, label="создаёт"];
+  Place -> Buffer [label="постановка / вытеснение"];
+  Place -> Stats [style=dashed];
+  Select -> Buffer [label="кольцевая выборка"];
+  Select -> Pool [label="Д2П1"];
+  Select -> Calendar [label="schedule"];
+  Select -> Stats [style=dashed];
+  Buffer -> Request [label="0..B ожидающих"];
+  Pool -> Worker [label="1..M"];
+  Worker -> Request [label="0..1 текущая"];
+  Worker -> Calendar [style=dashed, label="завершение"];
+  Calendar -> Event [label="0..*"];
+  Stats -> Request [style=dashed, label="времена и статусы"];
+  Engine -> View [style=dashed, label="снимок / отчёт"];
+}

@@ -1,0 +1,76 @@
+@startuml
+ title Flowchart с дорожками — жизненный цикл поискового запроса
+ skinparam shadowing false
+ skinparam activity {
+   BackgroundColor #F8FAFC
+   BorderColor #526070
+   DiamondBackgroundColor #FFF4CC
+   DiamondBorderColor #9B7B21
+   StartColor #D6F5DF
+   EndColor #FADBD8
+ }
+ start
+ while (Календарь не пуст и условие остановки не выполнено?) is (да)
+   |EventCalendar / SimulationEngine|
+   :Извлечь ближайшее событие по времени;
+   if (Тип события = ARRIVAL?) then (да)
+     |Source|
+     :Создать новую заявку;
+     :Выбрать следующий интервал\nпо Exp(lambda) — ИЗ1;
+     |Statistics|
+     :Увеличить N_generated;
+     |PlacementDispatcher|
+     :Запросить свободную ячейку\nв Buffer от putPointer;
+     |Buffer|
+     if (Есть свободная ячейка?) then (да)
+       :Поместить заявку по кольцу\nи сдвинуть putPointer — Д1ОЗ1;
+     else (нет, буфер полон)
+       :Найти старейшую ожидающую\nзаявку (enqueuedAt, затем ID);
+       :Удалить её из буфера;
+       |Statistics|
+       :Увеличить N_evicted\nи зафиксировать отказ — Д1ОО3;
+       |Buffer|
+       :Записать новую заявку\nв освободившуюся ячейку;
+       :Обновить putPointer — Д1ОЗ1;
+     endif
+     |EventCalendar / SimulationEngine|
+     :Запланировать следующую ARRIVAL;
+     :Триггер REQUEST_ENQUEUED;
+   else (SERVICE_COMPLETION)
+     |Worker|
+     :Завершить обработку заявки;
+     :Перевести прибор в FREE;
+     |Statistics|
+     :Учесть завершение, ожидание,\nвремя в системе и занятость;
+     |EventCalendar / SimulationEngine|
+     :Триггер SERVICE_COMPLETED;
+   endif
+
+   |SelectionDispatcher|
+   while (Буфер не пуст и есть свободный прибор?) is (да)
+     |DevicePool|
+     :Найти первый свободный прибор\nпо возрастанию номера — Д2П1;
+     |Buffer|
+     :Найти первую занятую ячейку\nпо кольцу от selectionPointer;
+     :Извлечь заявку и сдвинуть\nselectionPointer — Д2Б3;
+     |Worker|
+     :Начать обслуживание заявки;
+     :Выбрать длительность\nU(t_min, t_max) — ПЗ2;
+     |EventCalendar / SimulationEngine|
+     :Запланировать SERVICE_COMPLETION;
+     |Statistics|
+     :Зафиксировать начало обслуживания\nи время ожидания;
+   endwhile (нет)
+   |SimulationEngine|
+   if (Режим = ОД1?) then (пошаговый)
+     |StepByStepView|
+     :Показать строку календаря и состояние\nисточников, буфера, указателей, приборов\nи текущей статистики;
+   else (автоматический ОР1)
+     |ResultsReporter|
+     :Обновить сводную таблицу\nпоказателей;
+   endif
+ endwhile (нет)
+ |ResultsReporter|
+ :Сформировать итоговую таблицу результатов;
+ stop
+@enduml

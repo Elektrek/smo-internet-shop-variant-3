@@ -1,0 +1,44 @@
+@startuml
+ title Краевой случай — переполнение буфера и вытеснение старейшей заявки
+ autonumber
+ actor "Источник" as Source
+ control "SimulationEngine" as Engine
+ control "PlacementDispatcher" as Put
+ queue "Buffer\n(все B ячеек заняты)" as Buffer
+ control "Statistics" as Stats
+ control "SelectionDispatcher" as Select
+ collections "DevicePool" as Pool
+
+ Calendar -> Engine: ARRIVAL(now)
+ Engine -> Source: generateRequest(now)
+ Source --> Engine: newRequest
+ Source -> Source: sample delta ~ Exp(lambda_source) [ИЗ1]
+ Source -> Calendar: schedule(next ARRIVAL, now + delta)
+ Calendar --> Source: registered
+ Engine -> Stats: recordGenerated(newRequest)
+ Engine -> Put: handleArrival(newRequest, now)
+ Put -> Buffer: findFreeSlotCircular(putPointer)
+ Buffer --> Put: FULL
+ note over Put,Buffer
+ Д1ОО3: вытесняется старейшая ожидающая заявка,
+ а не заявка, которая уже обслуживается прибором.
+ Критерий возраста: min(enqueuedAt); при равенстве — min(sequenceId).
+ end note
+ Put -> Buffer: findOldestWaiting()
+ Buffer --> Put: victim, slot
+ Put -> Buffer: remove(victim)
+ Buffer --> Put: removed(slot)
+ Put -> Stats: recordEvicted(victim)
+ Stats --> Put: counters updated
+ Put -> Buffer: enqueueCircular(newRequest) [Д1ОЗ1]
+ Buffer --> Put: stored(slot); putPointer updated [Д1ОЗ1]
+ Put --> Engine: accepted; one request evicted
+ Engine -> Select: onRequestEnqueued(now)
+ Select -> Pool: findFirstFreeByIndex() [Д2П1]
+ Pool --> Select: none (при полном буфере все приборы заняты)
+ Select --> Engine: new request waits in buffer until SERVICE_COMPLETION
+ note over Buffer,Select
+ Выборка по Д2Б3 произойдёт только после события,
+ которое освободит хотя бы один прибор.
+ end note
+@enduml

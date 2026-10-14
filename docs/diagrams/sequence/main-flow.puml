@@ -1,0 +1,103 @@
+@startuml
+ title Основной сиквенс — поиск товаров интернет-магазина (вариант 3)
+ autonumber
+ actor "Источник\n(веб / мобильный / API)" as Source
+ control "SimulationEngine" as Engine
+ control "PlacementDispatcher" as Put
+ queue "Buffer\n(B ячеек)" as Buffer
+ control "SelectionDispatcher" as Select
+ collections "DevicePool" as Pool
+ participant "Worker i" as Worker
+ collections "EventCalendar" as Calendar
+ control "Statistics" as Stats
+
+ == Генерация заявки ==
+ Calendar -> Engine: ARRIVAL(sourceId, now)
+ Engine -> Source: generateRequest(now)
+ Source --> Engine: Request(id, sourceId, query, filters)
+ Source -> Source: sample delta ~ Exp(lambda_source) [ИЗ1]
+ Source -> Calendar: schedule(ARRIVAL, now + delta)
+ Calendar --> Source: зарегистрировано
+ note over Source,Engine
+ ИБ — бесконечная совокупность заявителей.
+ ИЗ1 — экспоненциальные интервалы между генерациями.
+ T_arr ~ Exp(lambda_source)
+ end note
+ Engine -> Stats: recordGenerated(request)
+ Engine -> Put: handleArrival(request, now)
+
+ == Постановка в буфер ==
+ Put -> Buffer: findFreeSlotCircular(putPointer)
+ Buffer --> Put: свободный индекс / FULL
+ alt Есть свободная ячейка
+   Put -> Buffer: enqueueCircular(request)\n[Д1ОЗ1]
+   Buffer --> Put: stored(slot), putPointer updated
+ else Буфер заполнен
+   note over Put,Buffer
+   В нормальном цикле это означает,
+   что все приборы заняты: свободный прибор
+   был бы немедленно использован после прошлого триггера.
+   end note
+   Put -> Buffer: evictOldestWaiting()
+   Buffer --> Put: victim + slot
+   Put -> Stats: recordEvicted(victim)\n[Д1ОО3]
+   Put -> Buffer: enqueueCircular(request) [Д1ОЗ1]
+   Buffer --> Put: stored(slot), putPointer updated
+ end
+ Put --> Engine: PlacementResult(accepted, optionalVictim)
+
+ == Триггер выбора после постановки ==
+ Engine -> Select: onRequestEnqueued(now)
+ note over Engine,Select
+ Диспетчер выбора не опрашивает систему постоянно.
+ Триггер: успешная постановка заявки в буфер.
+ end note
+ alt Есть ожидающая заявка и свободный прибор
+   loop Пока буфер непуст и найден свободный прибор
+     Select -> Pool: findFirstFreeByIndex() [Д2П1]
+     Pool --> Select: первый свободный Worker
+     Select -> Buffer: dequeueCircular(selectionPointer) [Д2Б3]
+     Buffer --> Select: Request + slot; selectionPointer updated
+     Select -> Worker: startService(request, now)
+     Worker -> Worker: sample U(t_min, t_max) [ПЗ2]
+     Worker --> Select: accepted, completionTime
+     Select -> Calendar: schedule(SERVICE_COMPLETION, completionTime, workerId, requestId)
+     Select -> Stats: recordServiceStarted(request, workerId, now)
+   end
+ else Все приборы заняты или буфер пуст
+   Select --> Engine: no dispatch; ожидать следующий триггер
+ end
+
+ == Завершение обслуживания ==
+ Calendar -> Engine: SERVICE_COMPLETION(workerId, requestId, time)
+ Engine -> Worker: completeService(now)
+ Worker --> Engine: completed Request; состояние Worker = FREE
+ Engine -> Stats: recordCompleted(request, now)\nобновить W и время занятости
+ Engine -> Select: onDeviceAvailable(now)
+ note over Engine,Select
+ Триггер: освобождение прибора.
+ Сначала назначаются ожидающие заявки,
+ пока есть свободные приборы и заявки в буфере.
+ end note
+ alt Буфер содержит заявки
+   loop Пока есть заявка и свободный прибор
+     Select -> Pool: findFirstFreeByIndex() [Д2П1]
+     Pool --> Select: Worker
+     Select -> Buffer: dequeueCircular(selectionPointer) [Д2Б3]
+     Buffer --> Select: Request; selectionPointer updated
+     Select -> Worker: startService(request, now)
+     Worker -> Worker: sample U(t_min, t_max) [ПЗ2]
+     Worker --> Select: completionTime
+     Select -> Calendar: schedule(SERVICE_COMPLETION, completionTime, workerId, requestId)
+     Select -> Stats: recordServiceStarted(request, workerId, now)
+   end
+ else Буфер пуст
+   Select --> Engine: бездействовать до нового триггера
+ end
+
+ note over Stats
+ ОР1: в автоматическом режиме — сводная таблица результатов.
+ ОД1: в пошаговом режиме — таблица календаря и состояния
+ источников, ячеек буфера, обоих указателей и приборов.
+ end note
+@enduml

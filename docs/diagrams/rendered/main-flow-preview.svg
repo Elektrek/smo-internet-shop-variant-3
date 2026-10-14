@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2260" height="2955" viewBox="0 0 2260 2955">
+<defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#334155"/></marker><marker id="arrowOpen" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="white" stroke="#64748B"/></marker></defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<text x="1130.0" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" font-weight="bold" fill="#0F172A">Основной сиквенс — вариант 3</text>
+<rect x="60.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="170.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">Источник</text>
+<line x1="170.0" y1="125" x2="170.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="300.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="410.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">SimulationEngine</text>
+<line x1="410.0" y1="125" x2="410.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="540.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="650.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">PlacementDispatcher</text>
+<line x1="650.0" y1="125" x2="650.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="780.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="890.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">Buffer</text>
+<line x1="890.0" y1="125" x2="890.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="1020.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="1130.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">SelectionDispatcher</text>
+<line x1="1130.0" y1="125" x2="1130.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="1260.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="1370.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">DevicePool</text>
+<line x1="1370.0" y1="125" x2="1370.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="1500.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="1610.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">Worker i</text>
+<line x1="1610.0" y1="125" x2="1610.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="1740.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="1850.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">EventCalendar</text>
+<line x1="1850.0" y1="125" x2="1850.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="1980.0" y="75" width="220" height="50" rx="8" fill="#E8F1FB" stroke="#7C93B5" stroke-width="1.5"/>
+<text x="2090.0" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#1E3A5F">Statistics</text>
+<line x1="2090.0" y1="125" x2="2090.0" y2="2910" stroke="#A8B3C2" stroke-width="1.5" stroke-dasharray="7,7"/>
+<rect x="25" y="138" width="2210" height="34" fill="#E8EDF4" stroke="#CBD5E1"/>
+<text x="1130.0" y="160" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#334155">1. ARRIVAL и закон генерации — ИБ, ИЗ1</text>
+<text x="1130.0" y="204" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">ARRIVAL(sourceId, now)</text>
+<line x1="1842.0" y1="223" x2="420.0" y2="223" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="290.0" y="264" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">generateRequest(now)</text>
+<line x1="402.0" y1="283" x2="180.0" y2="283" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="290.0" y="324" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">Request(id, sourceId, query,</text>
+<text x="290.0" y="306" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">filters)</text>
+<line x1="178.0" y1="343" x2="400.0" y2="343" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<text x="170.0" y="384" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">sample delta ~ Exp(lambda_source)</text>
+<text x="170.0" y="366" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">[ИЗ1]</text>
+<path d="M170.0 403 h55 v24 h-45" fill="none" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1010.0" y="444" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">schedule(next ARRIVAL, now + delta)</text>
+<line x1="178.0" y1="463" x2="1840.0" y2="463" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1010.0" y="504" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">registered</text>
+<line x1="1842.0" y1="523" x2="180.0" y2="523" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<rect x="45" y="558" width="2170" height="35" rx="5" fill="#FFF7D6" stroke="#D5B55A" stroke-dasharray="4,3"/>
+<text x="57" y="578" font-family="Arial,sans-serif" font-size="13" fill="#334155">ИБ — бесконечная совокупность источников; ИЗ1 — экспоненциальные интервалы между генерациями.</text>
+<text x="1250.0" y="624" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">recordGenerated(request)</text>
+<line x1="418.0" y1="643" x2="2080.0" y2="643" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="530.0" y="684" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">handleArrival(request, now)</text>
+<line x1="418.0" y1="703" x2="640.0" y2="703" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="25" y="738" width="2210" height="34" fill="#E8EDF4" stroke="#CBD5E1"/>
+<text x="1130.0" y="760" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#334155">2. Постановка в буфер — Д1ОЗ1 / Д1ОО3</text>
+<text x="770.0" y="804" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">findFreeSlotCircular(putPointer)</text>
+<line x1="658.0" y1="823" x2="880.0" y2="823" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="770.0" y="864" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">free slot / FULL</text>
+<line x1="882.0" y1="883" x2="660.0" y2="883" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<rect x="28" y="918" width="2204" height="35" rx="5" fill="#F5F8FC" stroke="#9CAFC4" stroke-dasharray="4,3"/>
+<text x="40" y="938" font-family="Arial,sans-serif" font-size="13" fill="#334155">alt: если свободная ячейка — вставить по кольцу; иначе найти старейшую ожидающую заявку и вытеснить её</text>
+<text x="770.0" y="984" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">enqueueCircular(request) [Д1ОЗ1]</text>
+<line x1="658.0" y1="1003" x2="880.0" y2="1003" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="770.0" y="1044" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">stored(slot); putPointer updated</text>
+<line x1="882.0" y1="1063" x2="660.0" y2="1063" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<text x="770.0" y="1104" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">evictOldestWaiting();</text>
+<text x="770.0" y="1086" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">enqueueCircular(new request)</text>
+<text x="770.0" y="1068" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">[Д1ОО3 + Д1ОЗ1]</text>
+<line x1="658.0" y1="1123" x2="880.0" y2="1123" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="770.0" y="1164" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">victim + freed slot; new request</text>
+<text x="770.0" y="1146" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">stored</text>
+<line x1="882.0" y1="1183" x2="660.0" y2="1183" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<text x="1370.0" y="1224" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">recordEvicted(victim) — только при переполнении</text>
+<line x1="658.0" y1="1243" x2="2080.0" y2="1243" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="530.0" y="1284" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">PlacementResult(accepted,</text>
+<text x="530.0" y="1266" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">optionalVictim)</text>
+<line x1="642.0" y1="1303" x2="420.0" y2="1303" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<rect x="25" y="1338" width="2210" height="34" fill="#E8EDF4" stroke="#CBD5E1"/>
+<text x="1130.0" y="1360" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#334155">3. Триггер выбора после REQUEST_ENQUEUED</text>
+<text x="770.0" y="1404" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">onRequestEnqueued(now) — триггер</text>
+<line x1="418.0" y1="1423" x2="1120.0" y2="1423" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="28" y="1458" width="2204" height="35" rx="5" fill="#F0FDF4" stroke="#86B899" stroke-dasharray="4,3"/>
+<text x="40" y="1478" font-family="Arial,sans-serif" font-size="13" fill="#334155">Пока буфер непуст и есть свободный прибор: повторять назначение.</text>
+<text x="1250.0" y="1524" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">findFirstFreeByIndex() [Д2П1]</text>
+<line x1="1138.0" y1="1543" x2="1360.0" y2="1543" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1250.0" y="1584" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">первый свободный Worker</text>
+<line x1="1362.0" y1="1603" x2="1140.0" y2="1603" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<text x="1010.0" y="1644" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">dequeueCircular(selectionPointer)</text>
+<text x="1010.0" y="1626" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">[Д2Б3]</text>
+<line x1="1122.0" y1="1663" x2="900.0" y2="1663" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1010.0" y="1704" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">Request + slot; selectionPointer</text>
+<text x="1010.0" y="1686" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">updated</text>
+<line x1="898.0" y1="1723" x2="1120.0" y2="1723" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<text x="1370.0" y="1764" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">startService(request, now)</text>
+<line x1="1138.0" y1="1783" x2="1600.0" y2="1783" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1610.0" y="1824" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">sample U(t_min, t_max) [ПЗ2]</text>
+<path d="M1610.0 1843 h55 v24 h-45" fill="none" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1370.0" y="1884" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">completionTime</text>
+<line x1="1602.0" y1="1903" x2="1140.0" y2="1903" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<text x="1490.0" y="1944" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">schedule(SERVICE_COMPLETION)</text>
+<line x1="1138.0" y1="1963" x2="1840.0" y2="1963" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1610.0" y="2004" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">recordServiceStarted(request, worker, now)</text>
+<line x1="1138.0" y1="2023" x2="2080.0" y2="2023" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="28" y="2058" width="2204" height="35" rx="5" fill="#F5F8FC" stroke="#9CAFC4" stroke-dasharray="4,3"/>
+<text x="40" y="2078" font-family="Arial,sans-serif" font-size="13" fill="#334155">Если все приборы заняты — заявка остаётся в буфере до SERVICE_COMPLETION; приборы не отказывают.</text>
+<rect x="25" y="2118" width="2210" height="34" fill="#E8EDF4" stroke="#CBD5E1"/>
+<text x="1130.0" y="2140" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#334155">4. Завершение обслуживания — триггер SERVICE_COMPLETED</text>
+<text x="1130.0" y="2184" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">SERVICE_COMPLETION(workerId, requestId, time)</text>
+<line x1="1842.0" y1="2203" x2="420.0" y2="2203" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1010.0" y="2244" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">completeService(now)</text>
+<line x1="418.0" y1="2263" x2="1600.0" y2="2263" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1010.0" y="2304" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">Request completed; Worker = FREE</text>
+<line x1="1602.0" y1="2323" x2="420.0" y2="2323" stroke="#334155" stroke-width="1.5" stroke-dasharray="7,5" marker-end="url(#arrowOpen)"/>
+<text x="1250.0" y="2364" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">recordCompleted; update wait/system time and</text>
+<text x="1250.0" y="2346" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">utilization</text>
+<line x1="418.0" y1="2383" x2="2080.0" y2="2383" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="770.0" y="2424" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">onDeviceAvailable(now) — триггер</text>
+<line x1="418.0" y1="2443" x2="1120.0" y2="2443" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="28" y="2478" width="2204" height="35" rx="5" fill="#F0FDF4" stroke="#86B899" stroke-dasharray="4,3"/>
+<text x="40" y="2498" font-family="Arial,sans-serif" font-size="13" fill="#334155">Повторять выбор по Д2Б3 и назначение по Д2П1, пока есть заявки и свободные приборы.</text>
+<text x="1250.0" y="2544" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">findFirstFreeByIndex() [Д2П1]</text>
+<line x1="1138.0" y1="2563" x2="1360.0" y2="2563" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1010.0" y="2604" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">dequeueCircular(selectionPointer)</text>
+<text x="1010.0" y="2586" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">[Д2Б3]</text>
+<line x1="1122.0" y1="2623" x2="900.0" y2="2623" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1370.0" y="2664" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">startService(request, now)</text>
+<line x1="1138.0" y1="2683" x2="1600.0" y2="2683" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1490.0" y="2724" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#0F172A">schedule(SERVICE_COMPLETION)</text>
+<line x1="1138.0" y1="2743" x2="1840.0" y2="2743" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="45" y="2778" width="2170" height="35" rx="5" fill="#FFF7D6" stroke="#D5B55A" stroke-dasharray="4,3"/>
+<text x="57" y="2798" font-family="Arial,sans-serif" font-size="13" fill="#334155">ОР1: автоматическая сводная таблица. ОД1: таблица календаря, слотов буфера, указателей, приборов и метрик.</text>
+<text x="25" y="2940" font-family="Arial,sans-serif" font-size="12" fill="#64748B">Предпросмотр логики; редактируемый канонический исходник находится рядом в формате PlantUML (.puml).</text>
+</svg>

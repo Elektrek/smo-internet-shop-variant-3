@@ -1,0 +1,65 @@
+@startuml
+ title Краевой случай — назначение заявки на прибор по Д2П1
+ autonumber
+ control "SimulationEngine" as Engine
+ control "SelectionDispatcher" as Select
+ collections "DevicePool" as Pool
+ queue "Buffer" as Buffer
+ participant "Worker #1" as W1
+ participant "Worker #2" as W2
+ participant "Worker #k (следующий индекс)" as WK
+ collections "EventCalendar" as Calendar
+ control "Statistics" as Stats
+
+ Engine -> Select: trigger REQUEST_ENQUEUED / SERVICE_COMPLETED
+ Select -> Buffer: isEmpty()
+ Buffer --> Select: false
+ Select -> Pool: findFirstFreeByIndex()\nпроверка от прибора №1 к №M
+ Pool -> W1: isBusy()?
+ W1 --> Pool: busy / free
+ alt Worker #1 свободен
+   Pool --> Select: Worker #1
+   Select -> Buffer: dequeueCircular(selectionPointer) [Д2Б3]
+   Buffer --> Select: request
+   Select -> W1: startService(request, now)
+   W1 -> W1: sample U(t_min,t_max) [ПЗ2]
+   W1 --> Select: completionTime
+   Select -> Calendar: schedule(SERVICE_COMPLETION)
+   Select -> Stats: recordServiceStarted(request, W1)
+ else Worker #1 занят
+   Pool -> W2: isBusy()?
+   W2 --> Pool: busy / free
+   alt Worker #2 свободен
+     Pool --> Select: Worker #2
+     Select -> Buffer: dequeueCircular(selectionPointer) [Д2Б3]
+     Buffer --> Select: request
+     Select -> W2: startService(request, now)
+     W2 -> W2: sample U(t_min,t_max) [ПЗ2]
+     W2 --> Select: completionTime
+     Select -> Calendar: schedule(SERVICE_COMPLETION)
+     Select -> Stats: recordServiceStarted(request, W2)
+   else Первые два заняты — продолжить сканирование
+     Pool -> Pool: проверить индексы 3..M\nпо возрастанию до первого FREE
+     alt Найден первый свободный прибор #k
+       Pool --> Select: первый свободный worker по номеру
+       Select -> Buffer: dequeueCircular(selectionPointer) [Д2Б3]
+       Buffer --> Select: request
+       Select -> WK: startService(request, now)
+       WK -> WK: sample U(t_min,t_max) [ПЗ2]
+       WK --> Select: completionTime
+       Select -> Calendar: schedule(SERVICE_COMPLETION)
+       Select -> Stats: recordServiceStarted(request, WK)
+     else Все приборы заняты
+       Pool --> Select: none
+       Select --> Engine: request remains in buffer; wait for SERVICE_COMPLETION
+     end
+   end
+ end
+ note over Pool,W1
+ Приборы не отказывают: состояние только FREE/BUSY.
+ При Д2П1 свободный прибор с меньшим номером имеет приоритет.
+ Просмотр продолжается последовательно от №1 до №M;
+ #k обозначает первый найденный свободный прибор.
+ Заявка извлекается только после нахождения свободного прибора.
+ end note
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+ title Happy Flow — буфер не заполнен, есть свободный прибор
+ autonumber
+ actor "Источник" as Source
+ control "SimulationEngine" as Engine
+ control "PlacementDispatcher" as Put
+ queue "Buffer" as Buffer
+ control "SelectionDispatcher" as Select
+ collections "DevicePool" as Pool
+ participant "Свободный Worker" as Worker
+ collections "EventCalendar" as Calendar
+ control "Statistics" as Stats
+
+ Calendar -> Engine: ARRIVAL(sourceId, now)
+ Engine -> Source: generateRequest(now)
+ Source --> Engine: request
+ Source -> Source: sample delta ~ Exp(lambda_source) [ИЗ1]
+ Source -> Calendar: schedule(next ARRIVAL, now + delta)
+ Calendar --> Source: registered
+ Engine -> Stats: recordGenerated(request)
+ Engine -> Put: handleArrival(request, now)
+ Put -> Buffer: findFreeSlotCircular(putPointer)
+ Buffer --> Put: freeSlot
+ Put -> Buffer: enqueueCircular(request) [Д1ОЗ1]
+ Buffer --> Put: stored; putPointer moved
+ Put --> Engine: accepted
+ Engine -> Select: onRequestEnqueued(now)\n(триггер)
+ Select -> Pool: findFirstFreeByIndex() [Д2П1]
+ Pool --> Select: Worker #1 свободен
+ Select -> Buffer: dequeueCircular(selectionPointer) [Д2Б3]
+ Buffer --> Select: request; selectionPointer moved
+ Select -> Worker: startService(request, now)
+ Worker -> Worker: sample T_service ~ U(t_min, t_max) [ПЗ2]
+ Worker --> Select: completionTime
+ Select -> Calendar: schedule(SERVICE_COMPLETION)
+ Select -> Stats: recordServiceStarted(request)
+ ... модельное время обслуживания ...
+ Calendar -> Engine: SERVICE_COMPLETION
+ Engine -> Worker: completeService(now)
+ Worker --> Engine: request completed; worker FREE
+ Engine -> Stats: recordCompleted(request); update W and utilization
+ Engine -> Select: onDeviceAvailable(now) (триггер)
+ Select -> Buffer: size()
+ Buffer --> Select: 0
+ Select --> Engine: no waiting request; end dispatch
+@enduml

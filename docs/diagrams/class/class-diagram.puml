@@ -1,0 +1,205 @@
+@startuml
+ title Диаграмма классов — СМО поиска товаров интернет-магазина, вариант 3
+ skinparam classAttributeIconSize 0
+ skinparam linetype ortho
+ hide empty members
+
+ class SimulationEngine {
+   - modelTime: double
+   - sources: List<Source>
+   - eventCalendar: EventCalendar
+   - placementDispatcher: PlacementDispatcher
+   - selectionDispatcher: SelectionDispatcher
+   - devicePool: DevicePool
+   - statistics: Statistics
+   - stopCondition: StopCondition
+   + run(): void
+   + processNextEvent(): SimulationEvent
+   + onArrival(sourceId: String): void
+   + onServiceCompletion(workerId: int, requestId: long): void
+   + triggerSelection(reason: TriggerReason): void
+   + getStateSnapshot(): SimulationSnapshot
+ }
+
+ class Source {
+   - id: String
+   - displayName: String
+   - interarrival: ExponentialDistribution
+   - nextRequestId: long
+   - nextArrivalTime: double
+   + generateRequest(now: double): Request
+   + sampleNextArrival(now: double): double
+ }
+
+ class Request {
+   - id: long
+   - sourceId: String
+   - queryText: String
+   - filters: Map<String, String>
+   - generatedAt: double
+   - enqueuedAt: double
+   - serviceStartedAt: double
+   - completedAt: double
+   - status: RequestStatus
+   + markBuffered(now: double): void
+   + markInService(now: double): void
+   + markCompleted(now: double): void
+   + getWaitTime(): double
+   + getSojournTime(): double
+ }
+
+ class Buffer {
+   - capacity: int
+   - slots: Request[]
+   - putPointer: int
+   - selectionPointer: int
+   + isFull(): boolean
+   + isEmpty(): boolean
+   + size(): int
+   + findFreeSlotCircular(): int
+   + enqueueCircular(request: Request, now: double): BufferResult
+   + dequeueCircular(): Request
+   + findOldestWaiting(): Request
+   + evictOldest(): Request
+   + snapshotSlots(): List<Request>
+   + getPointers(): PointerSnapshot
+ }
+
+ class PlacementDispatcher {
+   - buffer: Buffer
+   - statistics: Statistics
+   + handleArrival(request: Request, now: double): PlacementResult
+   - applyOverflowRule(now: double): Request
+ }
+
+ class SelectionDispatcher {
+   - buffer: Buffer
+   - devicePool: DevicePool
+   - eventCalendar: EventCalendar
+   - statistics: Statistics
+   + onRequestEnqueued(now: double): void
+   + onDeviceAvailable(now: double): void
+   + dispatchWhilePossible(now: double): void
+   - startOnWorker(request: Request, worker: Worker, now: double): void
+ }
+
+ class DevicePool {
+   - workers: List<Worker>
+   + findFirstFreeByIndex(): Worker
+   + hasFreeWorker(): boolean
+   + allBusy(): boolean
+   + snapshot(): List<WorkerSnapshot>
+ }
+
+ class Worker {
+   - id: int
+   - state: WorkerState
+   - currentRequest: Request
+   - serviceDistribution: UniformServiceDistribution
+   - accumulatedBusyTime: double
+   - busySince: double
+   + isBusy(): boolean
+   + startService(request: Request, now: double): double
+   + completeService(now: double): Request
+   + getSnapshot(now: double): WorkerSnapshot
+ }
+
+ class EventCalendar {
+   - events: PriorityQueue<SimulationEvent>
+   - nextSequence: long
+   + schedule(event: SimulationEvent): void
+   + pollNext(): SimulationEvent
+   + peekNextTime(): double
+   + isEmpty(): boolean
+   + snapshot(): List<SimulationEvent>
+ }
+
+ class SimulationEvent {
+   - time: double
+   - sequence: long
+   - type: EventType
+   - sourceId: String
+   - workerId: int
+   - requestId: long
+   + compareTo(other: SimulationEvent): int
+ }
+
+ class Statistics {
+   - generatedCount: long
+   - completedCount: long
+   - evictedCount: long
+   - totalWaitTime: double
+   - totalSojournTime: double
+   - busyTimeByWorker: Map<int, double>
+   + recordGenerated(request: Request): void
+   + recordEvicted(request: Request): void
+   + recordServiceStarted(request: Request, worker: Worker, now: double): void
+   + recordCompleted(request: Request, now: double): void
+   + refusalRate(): double
+   + averageWaitTime(): double
+   + averageSojournTime(): double
+   + utilization(workerId: int, duration: double): double
+   + resultsSnapshot(): ResultsSnapshot
+ }
+
+ class ExponentialDistribution {
+   - lambda: double
+   + sample(): double
+ }
+
+ class UniformServiceDistribution {
+   - minTime: double
+   - maxTime: double
+   + sample(): double
+ }
+
+ class StepByStepView {
+   + showCalendar(snapshot: SimulationSnapshot): void
+   + showSources(snapshot: SimulationSnapshot): void
+   + showBufferAndPointers(snapshot: SimulationSnapshot): void
+   + showWorkers(snapshot: SimulationSnapshot): void
+   + showMetrics(snapshot: SimulationSnapshot): void
+ }
+
+ class ResultsReporter {
+   + buildSummary(results: ResultsSnapshot): Table
+   + exportTable(results: ResultsSnapshot): void
+ }
+
+ class SimulationSnapshot
+ class ResultsSnapshot
+ class PointerSnapshot
+ class WorkerSnapshot
+ class StopCondition
+ enum RequestStatus
+ enum EventType
+ enum WorkerState
+ enum TriggerReason
+
+ SimulationEngine "1" *-- "1..*" Source : запускает генерацию
+ SimulationEngine "1" *-- "1" EventCalendar
+ SimulationEngine "1" *-- "1" PlacementDispatcher
+ SimulationEngine "1" *-- "1" SelectionDispatcher
+ SimulationEngine "1" *-- "1" DevicePool
+ SimulationEngine "1" *-- "1" Statistics
+ SimulationEngine --> StopCondition
+ SimulationEngine ..> StepByStepView : snapshot в ОД1
+ Statistics ..> ResultsReporter : результаты ОР1
+ Source --> ExponentialDistribution : ИЗ1
+ Buffer "1" *-- "0..B" Request : хранит ожидающие заявки
+ PlacementDispatcher --> Buffer : постановка / вытеснение
+ PlacementDispatcher --> Statistics : учёт вытеснения
+ SelectionDispatcher --> Buffer : Д2Б3: кольцевая выборка
+ SelectionDispatcher --> DevicePool : Д2П1: первый свободный
+ SelectionDispatcher --> EventCalendar : событие завершения
+ SelectionDispatcher --> Statistics : ожидание / старт
+ DevicePool "1" *-- "1..M" Worker
+ Worker --> UniformServiceDistribution : ПЗ2
+ Worker "0..1" --> Request : текущая заявка
+ EventCalendar "1" o-- "0..*" SimulationEvent
+ Statistics ..> Request : агрегирует времена
+ StepByStepView ..> SimulationSnapshot
+ ResultsReporter ..> ResultsSnapshot
+ Buffer ..> PointerSnapshot : состояние указателей
+ DevicePool ..> WorkerSnapshot
+@enduml
