@@ -11,20 +11,19 @@
 ### 1. Основной сиквенс
 Генерация заявки, постановка в буфер, вытеснение при переполнении, выбор заявки и её обслуживание.
 
-[Исходник PlantUML](docs/diagrams/sequence/main-flow.puml) · [Открыть диаграмму](docs/diagrams/rendered/main-flow-preview.png)
+[Открыть диаграмму](docs/diagrams/rendered/main-flow.png)
 
 <details>
 <summary>Показать диаграмму</summary>
 
-![Основной сиквенс](docs/diagrams/rendered/main-flow-preview.png)
+![Основной сиквенс](docs/diagrams/rendered/main-flow.png)
 
 </details>
 
 ### 2. Диаграмма классов
 Классы системы, их методы, поля и связи между компонентами.
 
-[Исходник PlantUML](docs/diagrams/class/class-diagram.puml) · [Открыть диаграмму](docs/diagrams/rendered/class-diagram-preview.png)
-
+[Открыть диаграмму](docs/diagrams/rendered/class-diagram-preview.png)
 <details>
 <summary>Показать диаграмму</summary>
 
@@ -35,7 +34,7 @@
 ### 3. Flowchart с дорожками
 Основной алгоритм работы системы и альтернативные сценарии.
 
-[Исходник PlantUML](docs/diagrams/flowchart/system-flow.puml) · [Открыть диаграмму](docs/diagrams/rendered/system-flow-preview.png)
+[Открыть диаграмму](docs/diagrams/rendered/system-flow-preview.png)
 
 <details>
 <summary>Показать диаграмму</summary>
@@ -45,10 +44,19 @@
 </details>
 
 ### Дополнительные сиквенсы
-- [Happy Flow](docs/diagrams/sequence/happy-flow.puml) — буфер и прибор доступны.
-- [Переполнение буфера](docs/diagrams/sequence/overflow.puml) — вытеснение самой старой ожидающей заявки.
-- [Операции буфера](docs/diagrams/sequence/buffer-operations.puml) — кольцевая постановка и выборка.
-- [Назначение прибора](docs/diagrams/sequence/device-assignment.puml) — поиск первого свободного прибора.
+- [Happy Flow](docs/diagrams/rendered/happy-flow.png) — буфер и прибор доступны.
+- [Переполнение буфера](docs/diagrams/rendered/overflow.png) — вытеснение самой старой ожидающей заявки.
+- [Операции буфера](docs/diagrams/sequence/buffer-operations.png) — кольцевая постановка и выборка.
+- [Назначение прибора](docs/diagrams/sequence/device-assignment.png) — поиск первого свободного прибора.
+
+## Консольная реализация
+
+Исходный код находится в папке `src/`.
+
+Запуск в Windows — `start.bat`.
+Запуск тестов — `test.bat`.
+
+Подробная инструкция: [README программы](docs/console-program.md).
 
 ## Расшифровка варианта 3
 
@@ -73,9 +81,3 @@
 - Статистика включает число поступивших, обработанных и вытесненных заявок, время ожидания и пребывания в системе, а также загрузку приборов.
 
 Цель экспериментов — подобрать число приборов и размер буфера, при которых доля отказов не превышает 10%, загрузка приборов близка к 90%, а среднее время пребывания заявки в системе минимально. Оптимальная конфигурация определяется по результатам моделирования.
-
-## Дополнительные материалы
-
-- [Описание бизнес-домена и варианта](docs/variant-and-domain.md)
-- [Допущения и логика событий](docs/model-assumptions.md)
-- [Чек-лист перед сдачей](docs/submission-checklist.md)
