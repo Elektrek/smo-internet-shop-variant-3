@@ -46,8 +46,8 @@
 ### Дополнительные сиквенсы
 - [Happy Flow](docs/diagrams/rendered/happy-flow.png) — буфер и прибор доступны.
 - [Переполнение буфера](docs/diagrams/rendered/overflow.png) — вытеснение самой старой ожидающей заявки.
-- [Операции буфера](docs/diagrams/sequence/buffer-operations.png) — кольцевая постановка и выборка.
-- [Назначение прибора](docs/diagrams/sequence/device-assignment.png) — поиск первого свободного прибора.
+- [Операции буфера](docs/diagrams/rendered/buffer-operations.png) — кольцевая постановка и выборка.
+- [Назначение прибора](docs/diagrams/rendered/device-assignment.png) — поиск первого свободного прибора.
 
 ## Консольная реализация
 
