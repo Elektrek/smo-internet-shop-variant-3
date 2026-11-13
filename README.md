@@ -56,7 +56,7 @@
 Запуск в Windows — `start.bat`.
 Запуск тестов — `test.bat`.
 
-Подробная инструкция: [README программы](docs/console-program.md).
+Подробная инструкция: [README программы](program/README.md).
 
 ## Расшифровка варианта 3
 
