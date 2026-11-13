@@ -1,0 +1,12 @@
+{
+  "name": "smo-internet-shop-variant-3",
+  "version": "1.0.0",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "type": "module",
+  "description": "Консольная дискретно-событийная модель СМО поиска товаров интернет-магазина, вариант 3",
+  "scripts": {
+    "start": "node src/cli.js",
+    "test": "node --test"
+  }
+}
