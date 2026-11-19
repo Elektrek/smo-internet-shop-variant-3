@@ -1,4 +1,3 @@
-/** Формирует две итоговые таблицы ОР1 и экспортирует обе таблицы в CSV. */
 export class ResultsReporter {
   buildSummary(results) {
     return {
