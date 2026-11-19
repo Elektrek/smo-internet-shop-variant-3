@@ -1,7 +1,6 @@
 import { PointerSnapshot } from './snapshots.js';
 import { RequestStatus } from './entities.js';
 
-/** Общий ограниченный буфер с двумя независимыми кольцевыми указателями. */
 export class Buffer {
   constructor(capacity) {
     if (!Number.isInteger(capacity) || capacity < 1) throw new RangeError('Ёмкость буфера должна быть положительным целым числом');
@@ -46,10 +45,6 @@ export class Buffer {
     return null;
   }
 
-  /**
-   * Д1ОО3 по методичке: старейшая заявка определяется по времени генерации,
-   * при равенстве — по порядковому sequenceId для детерминированности.
-   */
   findOldestWaiting() {
     let oldest = null;
     let oldestIndex = -1;
