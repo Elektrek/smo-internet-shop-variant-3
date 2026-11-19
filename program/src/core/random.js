@@ -1,4 +1,3 @@
-/** Детерминированный генератор псевдослучайных чисел Mulberry32. */
 export class Random {
   constructor(seed = 42) {
     this.state = (Number(seed) >>> 0) || 0x6D2B79F5;
