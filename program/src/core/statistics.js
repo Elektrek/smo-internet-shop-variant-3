@@ -4,7 +4,6 @@ function mean(values) {
   return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
-/** Выборочная дисперсия (деление на n - 1), для n < 2 не определена. */
 function sampleVariance(values) {
   if (values.length < 2) return null;
   const average = mean(values);
