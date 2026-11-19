@@ -21,7 +21,6 @@ export class SimulationEvent {
 
 function compareEvents(a, b) { return a.compareTo(b); }
 
-/** Минимальная двоичная куча: ближайшее событие извлекается за O(log n). */
 export class EventCalendar {
   constructor() {
     this.heap = [];
