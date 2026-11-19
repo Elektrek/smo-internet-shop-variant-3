@@ -1,6 +1,5 @@
 import { EventType } from './event-calendar.js';
 
-/** Диспетчер постановки работает только с Buffer и Statistics. Он не обращается к приборам. */
 export class PlacementDispatcher {
   constructor(buffer, statistics) {
     this.buffer = buffer;
@@ -29,7 +28,6 @@ export class PlacementDispatcher {
 
 export const TriggerReason = Object.freeze({ REQUEST_ENQUEUED: 'REQUEST_ENQUEUED', SERVICE_COMPLETED: 'SERVICE_COMPLETED' });
 
-/** Диспетчер выбора запускается по триггерам: новая заявка или освобождение прибора. */
 export class SelectionDispatcher {
   constructor({ buffer, devicePool, eventCalendar, statistics, serviceMin, serviceMax }) {
     this.buffer = buffer;
