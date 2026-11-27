@@ -102,7 +102,7 @@ function printMenu() {
   console.log('-'.repeat(108));
   console.log(`Источники: ${config.sourceCount} · λ: ${config.lambda} · Приборы: ${config.workerCount} · Буфер: ${config.bufferCapacity}`);
   console.log(`Обслуживание: U(${config.serviceMin}, ${config.serviceMax}) · N: ${config.requestLimit} · Seed: ${config.seed}`);
-  console.log('\n1 — Пошаговый режим (ОД1)');
+  console.log('\n1 — Пошаговый режим (ОД3)');
   console.log('2 — Автоматический режим (ОР1)');
   console.log('3 — Изменить параметры');
   console.log('0 — Выход');
