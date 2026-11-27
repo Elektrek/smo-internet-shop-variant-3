@@ -7,6 +7,7 @@ import { DEFAULT_CONFIG } from '../src/core/config.js';
 import { SimulationEngine } from '../src/core/simulation-engine.js';
 import { estimateRequestCount } from '../src/core/statistics.js';
 import { ResultsReporter } from '../src/core/results-reporter.js';
+import { ConsoleView } from '../src/console/console-view.js';
 
 function makeRequest(id, sequenceId, generatedAt) {
   return new Request({
@@ -137,4 +138,53 @@ test('ОР1: CSV-отчёт содержит ровно две итоговые 
   assert.match(csv, /Таблица 2\. Коэффициенты использования приборов/);
   assert.equal(results.perSource.length, 2);
   assert.equal(results.perWorker.length, 2);
+});
+
+
+test('ОД3: пошаговый вывод содержит временные диаграммы и текущее состояние', () => {
+  const config = { ...DEFAULT_CONFIG, sourceCount: 2, lambda: 0.2, workerCount: 2, bufferCapacity: 3, requestLimit: 5, seed: 33 };
+  const engine = new SimulationEngine(config);
+  const view = new ConsoleView();
+  const output = [];
+  const originalLog = console.log;
+  console.log = (...args) => output.push(args.join(' '));
+  try {
+    let snapshot = engine.initialize();
+    view.printStep(snapshot, 0);
+    snapshot = engine.processNextEvent();
+    view.printStep(snapshot, 1);
+  } finally {
+    console.log = originalLog;
+  }
+  const rendered = output.join('\n');
+  assert.match(rendered, /ПОШАГОВОЕ МОДЕЛИРОВАНИЕ \(ОД3\)/);
+  assert.match(rendered, /ВРЕМЕННЫЕ ДИАГРАММЫ \(ОД3\)/);
+  assert.match(rendered, /ТЕКУЩЕЕ СОСТОЯНИЕ: ИСТОЧНИКИ/);
+  assert.match(rendered, /ТЕКУЩЕЕ СОСТОЯНИЕ: БУФЕР/);
+  assert.match(rendered, /ТЕКУЩЕЕ СОСТОЯНИЕ: ПРИБОРЫ/);
+  assert.doesNotMatch(rendered, /ПОШАГОВОЕ МОДЕЛИРОВАНИЕ \(ОД1\)/);
+});
+
+test('ОД3: временная диаграмма отражает поступления, занятость приборов и состояние буфера', () => {
+  const config = { ...DEFAULT_CONFIG, sourceCount: 1, lambda: 0.2, workerCount: 1, bufferCapacity: 2, requestLimit: 4, seed: 11 };
+  const engine = new SimulationEngine(config);
+  const view = new ConsoleView();
+  const output = [];
+  const originalLog = console.log;
+  console.log = (...args) => output.push(args.join(' '));
+  try {
+    let snapshot = engine.initialize();
+    view.printStep(snapshot, 0);
+    snapshot = engine.processNextEvent();
+    view.printStep(snapshot, 1);
+  } finally {
+    console.log = originalLog;
+  }
+  const rendered = output.join('\n');
+  assert.match(rendered, /События/);
+  assert.match(rendered, /S1/);
+  assert.match(rendered, /Б1/);
+  assert.match(rendered, /П1/);
+  assert.match(rendered, /A/);
+  assert.match(rendered, /█/);
 });
